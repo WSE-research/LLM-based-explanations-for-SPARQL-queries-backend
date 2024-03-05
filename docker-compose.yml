@@ -1,0 +1,11 @@
+version: '3'
+services:
+  sparql2nl:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - 8099:${PORT}
+    container_name: sparql2nl
