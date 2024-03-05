@@ -75,7 +75,7 @@ ONE_SHOT_PROMPT = {
 }
 
 with open("qald.json") as f:
-    dataset = json.load(f)
+    dataset = json.load(f)["questions"]
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -91,7 +91,7 @@ client = OpenAI(
     api_key=token,
 )
 
-mongo_client = MongoClient(f'{os.getenv("MONGO_HOST")}:{os.getenv("MONGO_PORT")}',
+mongo_client = MongoClient(f"{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}",
     username=os.getenv("MONGO_USERNAME"),
     password=os.getenv("MONGO_PASSWORD"),
     authSource='admin'
@@ -311,9 +311,10 @@ def make_the_prompt(cache, query, prompt_template, lang='en', dataset=None):
       queries = [q["query"]["sparql"] for q in dataset].copy()
       questions = [get_question_by_language(q, 'qald', lang) for q in dataset].copy()
 
-      r_idx = queries.index(query)
-      queries.pop(r_idx) # remove the main query
-      questions.pop(r_idx) # remove the main query
+      if query in queries:
+        r_idx = queries.index(query)
+        queries.pop(r_idx) # remove the main query
+        questions.pop(r_idx) # remove the main query
 
       c_idx = random.choice([i for i in range(len(queries))]) # choice a random query to make a one shot
       shot_query = queries[c_idx]
@@ -327,6 +328,7 @@ def make_the_prompt(cache, query, prompt_template, lang='en', dataset=None):
 
 @app.get("/explanation")
 async def root(query_text: str, language: str = "en", shots: int = 1, model: str = "gpt-4-1106-preview"):
+    logger.info(query_text)
     try:
         if shots > 1 or shots < 0:
             return {"message": "Invalid number of shots. It should be either 0 or 1."}, 500
