@@ -11,7 +11,11 @@ ifdef::env-github[]
 :github-repository: https://github.com/WSE-research/LLM-based-explanations-for-SPARQL-queries-backend/
 endif::[]
 
-= Webservice: LLM-based natural-language representations for SPARQL queries 
+++++
+<img align="right" role="right" height="128" src="https://github.com/WSE-research/LLM-based-explanations-for-SPARQL-queries/blob/main/images/loris.png?raw=true"/>
+++++
+
+= Webservice: LLM-based natural-language representations for SPARQL queries (API)
 
 This project provides a web service for generating natural-language representations for SPARQL queries over the Wikidata or DBpedia knowledge graphs.
 
@@ -22,6 +26,80 @@ The corresponding web-based frontend -- LoRiS -  LLM-generated natural-languag
 toc::[]
 
 ---
+
+== Online Demo (API)
+
+The API is available at https://wse-research.org/api/sparql2nl
+
+Sample request
+
+```
+curl -X 'GET' \
+  'https://wse-research.org/api/sparql2nl?query_text=QUERYTEXT&language=LANG&shots=SHOTS&model=MODELID' \
+  -H 'accept: application/json'
+```
+
+* `query_text`: a SPARQL query over Wikidata or DBpedia
+* `language`: English (en), German (de), or Russian (ru)
+* `shots`: zero-shot (0), one-shot (1)
+* `model`: model id (any text model from OpenAI https://platform.openai.com/docs/models)
+
+== Building and Running the Application
+
+=== Running locally with Python 3.8+
+
+==== Install dependencies
+
+===== Install Python dependencies
+
+[source, bash]
+----
+pip install -r requirements.txt
+----
+
+Note: If you are using a virtual environment, make sure to activate it before running the command.
+
+==== Run the Application
+
+[source, bash]
+----
+python 
+----
+
+After that, you can access the application at http://localhost:PORT.
+
+=== Docker
+
+The application is available at https://hub.docker.com/repository/docker/wseresearch/loris-llm-generated-representations-of-sparql-queries/general[Dockerhub] for free use in your environment.
+
+`.env` file
+
+[source, env]
+----
+OPENAI_API_KEY=
+PORT=
+MONGO_HOST=
+MONGO_PORT=
+MONGO_USERNAME=
+MONGO_PASSWORD=
+----
+
+==== Build Docker Image
+
+[source, bash]
+----
+docker-compose build
+----
+
+
+==== Run Docker Image
+
+[source, bash]
+----
+docker-compose up
+----
+
+Now, you can access the application at http://localhost:8501.
 
 
 == Contribute
