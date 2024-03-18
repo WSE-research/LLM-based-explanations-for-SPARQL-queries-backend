@@ -369,7 +369,7 @@ async def feedback(payload: dict):
             'comment': comment,
             'date': datetime.now()
         }
-        db['feedback'].insert_one(feedback)
+        db['sparql2nl_feedback'].insert_one(feedback)
 
         return {"message": "Feedback received successfully."}, 200
     except Exception as e:
