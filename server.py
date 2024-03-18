@@ -349,5 +349,31 @@ async def root(query_text: str, language: str = "en", shots: int = 1, model: str
     except Exception as e:
         return {"message": str(e)}, 500
 
+@app.post("/feedback")
+async def feedback(payload: dict):
+    try:
+        query = payload.get('query_text', '')
+        verbalization = payload.get('verbalization', '')
+        rating = payload.get('rating', 0)
+        comment = payload.get('comment', '')
+
+        if rating < 1 or rating > 5:
+            return {"message": "Invalid rating. It should be between 1 and 5."}, 400
+        if len(query) == 0 or len(verbalization) == 0:
+            return {"message": "Invalid query or verbalization. They should not be empty."}, 400
+
+        feedback = {
+            'query': query,
+            'verbalization': verbalization,
+            'rating': rating,
+            'comment': comment,
+            'date': datetime.now()
+        }
+        db['feedback'].insert_one(feedback)
+
+        return {"message": "Feedback received successfully."}, 200
+    except Exception as e:
+        return {"message": str(e)}, 500
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8080)
