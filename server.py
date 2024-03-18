@@ -14,6 +14,8 @@ from pyparsing import ParseResults
 from rdflib.plugins.sparql.parser import parseQuery
 
 
+__version__ = "0.1.1"
+
 WIKIDATA_PREFIXES = ['wd:', 'wdt:', 'p:', 'ps:', 'pq:',]
 
 FIXED_LABELS = {
