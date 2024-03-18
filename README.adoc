@@ -31,7 +31,7 @@ toc::[]
 
 The API is available at https://wse-research.org/api/sparql2nl
 
-Sample request
+Sample SPARQL2NL API request:
 
 ```
 curl -X 'GET' \
@@ -43,6 +43,25 @@ curl -X 'GET' \
 * `language`: English (en), German (de), or Russian (ru)
 * `shots`: zero-shot (0), one-shot (1)
 * `model`: model id (any text model from OpenAI https://platform.openai.com/docs/models)
+
+Feedback API request:
+
+```
+curl -X 'POST'  'https://wse-research.org/api/sparql2nl-feedback' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+"query_text": "SELECT * WHERE { ?s ?p ?o }",
+"verbalization": "select everything",
+"rating": 5,
+"comment": "cool"
+}'
+```
+
+* `query_text`: a SPARQL query over Wikidata or DBpedia
+* `verbalization`: a result of our model
+* `rating`: a grade from 1 (bad) to 5 (good)
+* `comment`: optional, additional notes to the result
 
 == Building and Running the Application
 
