@@ -97,7 +97,7 @@ mongo_client = MongoClient(f"{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}
     authSource='admin'
 )
 
-db = mongo_client['QAfiltering']
+db = mongo_client['SPARQL2NL']
 
 def find_in_cache(collection_name: str, filter_dict: dict):
     try:
@@ -369,7 +369,7 @@ async def feedback(payload: dict):
             'comment': comment,
             'date': datetime.now()
         }
-        db['sparql2nl_feedback'].insert_one(feedback)
+        db['feedback'].insert_one(feedback)
 
         return {"message": "Feedback received successfully."}, 200
     except Exception as e:
