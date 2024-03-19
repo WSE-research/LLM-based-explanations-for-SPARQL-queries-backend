@@ -2,7 +2,7 @@ import os
 import json
 import uvicorn
 from utils import logger
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from datetime import datetime
 from pymongo import MongoClient
 from fastapi import Header, HTTPException
@@ -28,7 +28,11 @@ mongo_client = MongoClient(f"{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}
 db = mongo_client['SPARQL2NL']
 
 @app.get("/explanation")
-async def root(query_text: str, language: str = "en", shots: int = 1, model: str = "gpt-4-1106-preview", x_custom_header: str = Header(None)):
+async def root(request: Request, query_text: str, language: str = "en", shots: int = 1, model: str = "gpt-4-1106-preview"):
+    x_custom_header = request.headers.get('X-Custom-Header')
+
+    logger.info(str(request.headers))
+
     if x_custom_header != os.getenv("SECURITY_HEADER_VALUE"):
         raise HTTPException(status_code=400, detail="X-Custom-Header not found or invalid")
     
