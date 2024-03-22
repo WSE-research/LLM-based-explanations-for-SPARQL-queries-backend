@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from datetime import datetime
 from pymongo import MongoClient
 from fastapi import Header, HTTPException
-from utils.llms import ZERO_SHOT_PROMPT, ONE_SHOT_PROMPT, make_the_prompt, ask_openai
+from utils.llms import ZERO_SHOT_PROMPT, ONE_SHOT_PROMPT, make_the_prompt, ask_openai, ask_llm
 
 
 # Load environment variables from .env file if it exists
@@ -51,7 +51,12 @@ async def root(request: Request, query_text: str, language: str = "en", shots: i
             prompt_template = ONE_SHOT_PROMPT
 
         prompt = make_the_prompt(db, query_text, prompt_template, language, dataset)
-        predicted_nl = ask_openai(db=db, prompt=prompt, model=model)
+        if 'gpt' in model:
+            predicted_nl = ask_openai(db=db, prompt=prompt, model=model)
+        elif 'mistral' in model:
+            predicted_nl = ask_llm(db=db, prompt=prompt, model=model)
+        else:
+            raise Exception(f"The model {model} is not supported!")
 
         return {"explanation": predicted_nl}, 200
     except Exception as e:
