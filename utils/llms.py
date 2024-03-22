@@ -1,10 +1,12 @@
 import os
 import random
+import requests
 from openai import OpenAI
 from datetime import datetime
 from utils.rdf import extract_entities, get_wikidata_label
 
 
+MISTRAL_ENDPOINT = os.getenv("MISTRAL_ENDPOINT")
 token = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI(
@@ -93,6 +95,18 @@ def ask_openai(db, prompt, model="gpt-3.5-turbo"):
   cache_gpt(model, prompt, result, db)
 
   return result
+
+def ask_llm(db, prompt, model="mistral-7b-finetuned"):
+  cached_result = find_in_cache(model, {"prompt": prompt}, db)
+  if cached_result:
+    return cached_result["result"].replace("</s>", "").strip()
+
+  r = requests.get(MISTRAL_ENDPOINT, params={"prompt": prompt})
+  result = r.json()["result"]
+
+  cache_gpt(model, prompt, result, db)
+
+  return result.replace("</s>", "").strip()
 
 def get_question_by_language(item, dataset='qald', lang='en'):
   q_list = []
