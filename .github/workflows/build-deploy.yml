@@ -3,10 +3,18 @@ name: Docker Image CI
 env:
   DOCKER_IMAGE_NAME: wseresearch/loris-backend
   DOCKER_CONTAINER_NAME: loris-backend
+  SERVICE_PORT: ${{ secrets.SERVICE_PORT }}
+  SECURITY_HEADER_VALUE: ${{ secrets.SECURITY_HEADER_VALUE }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+  MONGO_PORT: ${{ secrets.MONGO_PORT }}
+  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+  MONGO_HOST: ${{ secrets.MONGO_HOST }}
+  MISTRAL_ENDPOINT: ${{ secrets.MISTRAL_ENDPOINT }}
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
@@ -44,16 +52,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
-          envs: DOCKER_IMAGE_NAME,DOCKER_CONTAINER_NAME
-          env:
-            SERVICE_PORT: ${{ secrets.SERVICE_PORT }}
-            SECURITY_HEADER_VALUE: ${{ secrets.SECURITY_HEADER_VALUE }}
-            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-            MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
-            MONGO_PORT: ${{ secrets.MONGO_PORT }}
-            MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-            MONGO_HOST: ${{ secrets.MONGO_HOST }}
-            MISTRAL_ENDPOINT: ${{ secrets.MISTRAL_ENDPOINT }}
+          envs: DOCKER_IMAGE_NAME,DOCKER_CONTAINER_NAME,SERVICE_PORT,SECURITY_HEADER_VALUE,OPENAI_API_KEY,MONGO_USERNAME,MONGO_PORT,MONGO_PASSWORD,MONGO_HOST,MISTRAL_ENDPOINT
           script: |
             docker stop "$DOCKER_CONTAINER_NAME" || true && docker rm -f "$DOCKER_CONTAINER_NAME" || true && docker image rm -f "$DOCKER_IMAGE_NAME:latest" || true
             echo "Pulling image: $DOCKER_IMAGE_NAME" 
