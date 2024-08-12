@@ -9,6 +9,8 @@ from fastapi import Header, HTTPException
 from utils.llms import ZERO_SHOT_PROMPT, ONE_SHOT_PROMPT, make_the_prompt, ask_openai, ask_llm
 
 
+__version__ = "0.1.0"
+
 # Load environment variables from .env file if it exists
 if os.path.exists('.env'):
     from dotenv import load_dotenv
