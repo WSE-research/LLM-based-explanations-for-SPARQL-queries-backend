@@ -15,7 +15,7 @@ endif::[]
 <img align="right" role="right" height="128" src="https://github.com/WSE-research/LLM-based-explanations-for-SPARQL-queries/blob/main/images/loris.png?raw=true"/>
 ++++
 
-= Webservice: LLM-based natural-language representations for SPARQL queries (API)
+= Web Service: LLM-based natural-language representations for SPARQL queries (API)
 
 This project provides a web service for generating natural-language representations for SPARQL queries over the Wikidata or DBpedia knowledge graphs.
 
